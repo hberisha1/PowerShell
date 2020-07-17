@@ -1,0 +1,21 @@
+$title = 'txt Assocation'
+$question = 'Select which App you want to use'
+
+$one = New-Object -TypeName System.Management.Automation.Host.ChoiceDescription '&1 for notepad'
+$two = New-Object -TypeName System.Management.Automation.Host.ChoiceDescription '&2 for notepad-plus'
+$options = [System.Management.Automation.Host.ChoiceDescription[]]@($one, $two)
+$result = $Host.UI.PromptForChoice( $title, $question, $options, 0)
+
+switch ($result) {
+    0 { 
+		
+		cmd /c ftype TXTFile="`"txtfile=%SystemRoot%\system32\NOTEPAD.EXE"`" `"%1`"
+		
+		} 
+		
+    1 { 
+		cmd /c ftype TXTFile="`"C:\Program Files (x86)\Notepad++\notepad++.exe"`" `"%1`"
+		
+		}
+		
+}
