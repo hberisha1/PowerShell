@@ -1,0 +1,35 @@
+$title = 'JPNL Assocation'
+$question = 'Select which version of java you want to use'
+
+$java17 = New-Object -TypeName System.Management.Automation.Host.ChoiceDescription '&7 for java17'
+$java18 = New-Object -TypeName System.Management.Automation.Host.ChoiceDescription '&8 for java18'
+$options = [System.Management.Automation.Host.ChoiceDescription[]]@($java17, $java18)
+$result = $Host.UI.PromptForChoice( $title, $question, $options, 0)
+
+switch ($result) {
+    0 { 
+		mkdir c:\windows\Sun
+		mkdir c:\windows\Sun\Java
+		mkdir c:\Windows\Sun\java\Deployment
+		copy "\\jdcapital\dfs\it\Software\VolRisk_Client\DeploymentRuleSet.jar" "c:\Windows\Sun\Java\Deployment1"
+		cd "C:\Program Files (x86)\Java\jre7\bin"
+		$deploy17 = .\keytool.exe -importcert -keystore "C:\Program Files (x86)\Java\jre7\lib\security\cacerts" -alias volrisk -file \\jdcapital\dfs\it\Software\VolRisk_Client\volrisk_public_cert -storepass changeit -noprompt
+		$deploy17
+		cmd /c ftype JNLPFile="`"C:\Program Files (x86)\Java\jre7\bin\javaws.exe"`" `"%1`"
+		
+		} 
+		
+    1 { 
+		$dxversion = (Get-ItemProperty "HKLM:\SOFTWARE\JavaSoft\Java Runtime Environment\1.8") | Select-Object -ExpandProperty JavaHome
+		mkdir c:\windows\Sun
+		mkdir c:\windows\Sun\Java
+		mkdir c:\Windows\Sun\java\Deployment
+		copy \\jdcapital\dfs\it\Software\VolRisk_Client\DeploymentRuleSet.jar c:\Windows\Sun\Java\Deployment
+		cd $dxversion\bin
+		$deploy18 = .\keytool.exe -importcert -keystore "$dxversion\lib\security\cacerts" -alias volrisk -file \\jdcapital\dfs\it\Software\VolRisk_Client\volrisk_public_cert -storepass changeit -noprompt
+		$deploy18
+		cmd.exe /c ftype JNLPFile="`"$dxversion\bin\javaws.exe"` `-securejws` `"%1`"
+		
+		}
+		
+}
